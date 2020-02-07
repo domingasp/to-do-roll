@@ -2,7 +2,7 @@
     $server_name = "localhost";
     $username = "root";
     $password = "password";
-    $database = "activity_roll";
+    $database = "to_do_roll";
 
     $conn = mysqli_connect($server_name, $username, $password, $database);
 
