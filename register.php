@@ -44,7 +44,6 @@
                     header("Location: sign_in.php");
                     die();
                 }
-
             }
         // If data not yet posted set the values for the variables to be blank(prevents "password" from being input into the password field)
         } else {

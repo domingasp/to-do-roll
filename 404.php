@@ -1,12 +1,4 @@
-<?php include("connection.php") ?><?php
-    session_start();
-
-    if(!isset($_SESSION["account_id"])) {
-        header("Location: sign_in.php");
-        die();
-    } else {
-        echo $_SESSION["account_id"];
-    }
+<?php
 
 ?><!DOCTYPE html>
 <html>
@@ -18,9 +10,9 @@
 
         <link rel="icon" href="assets/toDoRollFavicon.png">
 
-        <title>To Do Roll - Homepage</title>
+        <title>To Do Roll - Page Not Found</title>
     </head>
     <body>
-        <a href="sign_out.php">Sign Out</a>
+        <h1>404</h1>
     </body>
 </html>

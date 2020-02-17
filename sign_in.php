@@ -4,6 +4,7 @@
     // If signed in send them to main page
     if(isset($_SESSION["account_id"])) {
         header("Location: index.php");
+        die();
     } else {
         if ($_POST) {
             $email = filter_var(strtolower(trim($_POST["email"])), FILTER_SANITIZE_STRING);
