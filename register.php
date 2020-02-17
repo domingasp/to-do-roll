@@ -2,8 +2,9 @@
     session_start();
 
     // If signed in send them to main page
-    if(isset($_SESSION["account_id"])) {
+    if (isset($_SESSION["account_id"])) {
         header("Location: index.php");
+        die();
     } else {
         // If form submitted then try to sign user in
         if ($_POST) {
@@ -34,11 +35,20 @@
                     // Create hashed password
                     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
+                    // Generate verification token
+                    $verification_token = md5(uniqid(rand(), true));
+
+                    // Get current date and time in UTC
+                    $current_time = gmdate("Y-m-d H:i:s", time());
+
                     // Add to database
-                    $stmt = $conn->prepare("INSERT INTO Account(email, password, name) VALUES (?, ?, ?)");
-                    $stmt->bind_param("sss", $email, $hashed_password, $name);
+                    $stmt = $conn->prepare("INSERT INTO Account(email, password, name, date_created, verification_token, token_date, email_last_sent) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->bind_param("sssssss", $email, $hashed_password, $name, $current_time, $verification_token, $current_time, $current_time);
                     $stmt->execute();
                     $stmt->close();
+
+                    // Regenerate session id on form submission
+                    session_regenerate_id();
 
                     // Redirect to Sign In page
                     header("Location: sign_in.php");

@@ -2,7 +2,7 @@
     session_start();
 
     // If signed in send them to main page
-    if(isset($_SESSION["account_id"])) {
+    if (isset($_SESSION["account_id"])) {
         header("Location: index.php");
         die();
     } else {
@@ -31,6 +31,18 @@
                     if (password_verify($password, $hashed_password)) {
                         // Set session variable
                         $_SESSION["account_id"] = $account_id;
+
+                        // Get current time in UTC
+                        $current_time = gmdate("Y-m-d H:i:s", time());
+
+                        // Update the last logged on timestamp
+                        $stmt = $conn->prepare("UPDATE Account SET last_logon = ? WHERE account_id = ?");
+                        $stmt->bind_param("si", $current_time, $account_id);
+                        $stmt->execute();
+                        $stmt->close();
+
+                        // Regenerate session id on successful submission
+                        session_regenerate_id();
 
                         // Redirect to Sign In page
                         header("Location: index.php");
