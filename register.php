@@ -12,9 +12,9 @@
             $password = $_POST["password"];
 
             // Checks if any input fields are empty and if email is valid
-            $name_err = (empty($name) ? "No name entered" : "");
-            $email_err = (empty($email) ? "No email entered" : (!filter_var($email, FILTER_VALIDATE_EMAIL) ? "Invalid email format" : ""));
-            $password_err = (empty($password) ? "No password entered" : (strlen($password) < 8) ? "Password is too short" : "");
+            $name_err = (empty($name) ? "Please enter a name." : (strlen($name) > 255 ? "The name is too long." : ""));
+            $email_err = (empty($email) ? "Please enter an email." : (strlen($email) > 255 ? "The email is too long." : (!filter_var($email, FILTER_VALIDATE_EMAIL) ? "Email format is incorrect." : "")));
+            $password_err = (empty($password) ? "Please enter a password." : ((strlen($password) < 8) ? "Password should be 8 characters or longer." : ""));
 
             // If no errors where found create an account
             if (empty($name_err) && empty($email_err) && empty($password_err)) {
@@ -26,7 +26,7 @@
                 $result = $stmt->get_result();
                 $number = $result->num_rows;
 
-                $email_err = ($number > 0 ? "Email already exists" : "");
+                $email_err = ($number > 0 ? "An account with that email already exists" : "");
                 $stmt->close();
 
                 // If email does not exist create account
@@ -45,14 +45,11 @@
                     die();
                 }
 
-            // Else there are errors in input fields
-            } else {
-                /*
-                    ###################
-                    # Add error messages on form submit/add local validation
-                    ###################
-                */
             }
+        // If data not yet posted set the values for the variables to be blank(prevents "password" from being input into the password field)
+        } else {
+            $email = "";
+            $password = "";
         }
     }
 
@@ -72,20 +69,23 @@
         <img src="assets/toDoRollLogo.png" class="form-logo-center">
         <div class="form-outer-div">
             <h1 class="form-h1">Register</h1>
-            <form class="main-form" action="register.php" method="post" novalidate>
+            <form class="main-form" action="register.php" onsubmit="return validateForm()" method="post" novalidate>
                 <p class="form-instructions">Enter your details to create an account.</p>
 
                 <label class="form-label" for="name">Name</label>
-                <input class="form-input" id="name" name="name" type="text">
+                <input class="form-input <?php if(!empty($name_err)) echo "invalid-input"; ?>" id="name" name="name" type="text" value="<?php echo $name; ?>">
+                <?php if(!empty($name_err)) { echo "<p class='input-error'><i class='fas fa-exclamation-circle'></i> " . $name_err . "</p>"; } ?>
 
                 <label class="form-label" for="email">Email</label>
-                <input class="form-input" id="email" name="email" type="email">
+                <input class="form-input <?php if(!empty($email_err)) echo "invalid-input"; ?>" id="email" name="email" type="email" value="<?php echo $email; ?>">
+                <?php if(!empty($email_err)) { echo "<p class='input-error'><i class='fas fa-exclamation-circle'></i> " . $email_err . "</p>"; } ?>
 
                 <label class="form-label" for="password">Password</label>
-                <input class="form-input form-input-password" id="password" name="password" type="password">
+                <input class="form-input <?php if(!empty($password_err)) echo "invalid-input"; ?>" id="password" name="password" type="password" value="<?php echo $password; ?>">
+                <?php if(!empty($password_err)) { echo "<p class='input-error'><i class='fas fa-exclamation-circle'></i> " . $password_err . "</p>"; } ?>
 
                 <div class="form-checkbox">
-                    <input type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordView(this)">
+                    <input type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordView()">
                     <label for="showPasswordCheckbox">Show Password</label>
                 </div>
 

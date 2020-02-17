@@ -164,10 +164,6 @@ body {
 	box-shadow: 0 0 0.25rem 0 #00A7E1;
 }
 
-.form-input-password {
-	padding-right: 3rem;
-}
-
 .basic-btn {
 	padding: 0;
 	border: none;
@@ -294,4 +290,17 @@ body {
 
 .form-checkbox input:checked + label::after {
 	opacity: 1;
+}
+
+.input-error {
+	display: block;
+
+	color: red;
+
+	margin-top: 0.125rem;
+	padding: 0.5rem 0.25rem;
+}
+
+.invalid-input {
+	border-color: red;
 }

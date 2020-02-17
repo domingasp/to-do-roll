@@ -10,8 +10,8 @@
             $password = $_POST["password"];
 
             // Checks if any input fields are empty and if email is valid
-            $email_err = (empty($email) ? "No email entered" : (!filter_var($email, FILTER_VALIDATE_EMAIL) ? "Invalid email format" : ""));
-            $password_err = (empty($password) ? "No password entered" : "");
+            $email_err = (empty($email) ? "Please enter an email." : "");
+            $password_err = (empty($password) ? "Please enter a password." : "");
 
             // If no errors then sign in
             if (empty($email_err) && empty($password_err)) {
@@ -20,28 +20,31 @@
                 $stmt->bind_param("s", $email);
                 $stmt->execute();
                 $stmt->bind_result($account_id, $hashed_password);
+                $stmt->store_result();
                 $stmt->fetch();
+                $number = $stmt->num_rows;
                 $stmt->close();
 
-                if (password_verify($password, $hashed_password)) {
-                    // Set session variable
-                    $_SESSION["account_id"] = $account_id;
+                // If email exists, i.e. results return a row
+                if ($number > 0) {
+                    if (password_verify($password, $hashed_password)) {
+                        // Set session variable
+                        $_SESSION["account_id"] = $account_id;
 
-                    // Redirect to Sign In page
-                    header("Location: index.php");
-                    die();
+                        // Redirect to Sign In page
+                        header("Location: index.php");
+                        die();
+                    } else {
+                        $password_err = "The entered password is incorrect.";
+                    }
                 } else {
-                    echo "invalid input";
+                    $email_err = "No account exists with that email.";
                 }
-
-            // Else there are errors in input fields
-            } else {
-                /*
-                    ###################
-                    # Add error messages on form submit/add local validation
-                    ###################
-                */
             }
+        // If data not yet posted set the values for the variables to be blank(prevents "password" from being input into the password field)
+        } else {
+            $email = "";
+            $password = "";
         }
     }
 
@@ -63,13 +66,15 @@
             <h1 class="form-h1">Sign In</h1>
             <form class="main-form" action="sign_in.php" method="post" novalidate>
                 <label class="form-label" for="email">Email</label>
-                <input class="form-input" id="email" name="email" type="email">
+                <input class="form-input <?php if(!empty($email_err)) echo "invalid-input"; ?>" id="email" name="email" type="email" value="<?php echo $email; ?>">
+                <?php if (!empty($email_err)) { echo "<p class='input-error'><i class='fas fa-exclamation-circle'></i> " . $email_err . "</p>"; } ?>
 
                 <label class="form-label" for="password">Password</label>
-                <input class="form-input form-input-password" id="password" name="password" type="password">
+                <input class="form-input <?php if(!empty($password_err)) echo "invalid-input"; ?>" id="password" name="password" type="password" value="<?php echo $password; ?>">
+                <?php if (!empty($password_err)) { echo "<p class='input-error'><i class='fas fa-exclamation-circle'></i> " . $password_err . "</p>"; } ?>
 
                 <div class="form-checkbox">
-                    <input type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordView(this)">
+                    <input type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordView()">
                     <label for="showPasswordCheckbox">Show Password</label>
                 </div>
 
