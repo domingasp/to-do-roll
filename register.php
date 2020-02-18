@@ -42,16 +42,19 @@
                     $current_time = gmdate("Y-m-d H:i:s", time());
 
                     // Add to database
-                    $stmt = $conn->prepare("INSERT INTO Account(email, password, name, date_created, verification_token, token_date, email_last_sent) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                    $stmt->bind_param("sssssss", $email, $hashed_password, $name, $current_time, $verification_token, $current_time, $current_time);
+                    $stmt = $conn->prepare("INSERT INTO Account(email, password, name, date_created, verification_token, token_date) VALUES (?, ?, ?, ?, ?, ?)");
+                    $stmt->bind_param("ssssss", $email, $hashed_password, $name, $current_time, $verification_token, $current_time);
                     $stmt->execute();
                     $stmt->close();
 
                     // Regenerate session id on form submission
                     session_regenerate_id();
 
-                    // Redirect to Sign In page
-                    header("Location: sign_in.php");
+                    // Sets a banner message
+                    $_SESSION["banner-msg"] = "Your account has been created. Please check your email and use the link to verify your account.";
+
+                    // Redirect to Send Verification email
+                    header("Location: send_verification_email.php?email=" . $email);
                     die();
                 }
             }

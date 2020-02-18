@@ -167,3 +167,11 @@ function createErrorMessage(elem, error) {
 function removeErrorMessage(elem) {
     elem.nextElementSibling.remove();
 }
+
+function closeBanner(elem) {
+    banner = elem.parentNode;
+    banner.style.animation = "bannerUp 0.5s forwards";
+    setTimeout(function() {
+        banner.remove();
+    },500);
+}

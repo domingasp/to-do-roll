@@ -6,6 +6,12 @@
         header("Location: index.php");
         die();
     } else {
+        // Sets the banner message to the session variable if it has been set
+        if (isset($_SESSION["banner-msg"])) {
+            $banner = $_SESSION["banner-msg"];
+            unset($_SESSION["banner-msg"]);
+        }
+
         if ($_POST) {
             $email = filter_var(strtolower(trim($_POST["email"])), FILTER_SANITIZE_STRING);
             $password = $_POST["password"];
@@ -17,10 +23,10 @@
             // If no errors then sign in
             if (empty($email_err) && empty($password_err)) {
                 // Query database for accounts with the email
-                $stmt = $conn->prepare("SELECT account_id, password FROM Account WHERE email = ?");
+                $stmt = $conn->prepare("SELECT account_id, password, verified FROM Account WHERE email = ?");
                 $stmt->bind_param("s", $email);
                 $stmt->execute();
-                $stmt->bind_result($account_id, $hashed_password);
+                $stmt->bind_result($account_id, $hashed_password, $verified);
                 $stmt->store_result();
                 $stmt->fetch();
                 $number = $stmt->num_rows;
@@ -40,6 +46,11 @@
                         $stmt->bind_param("si", $current_time, $account_id);
                         $stmt->execute();
                         $stmt->close();
+
+                        // If email is not verified show the user a banner
+                        if ($verified == 0) {
+                            $_SESSION["banner-msg"] = "Please verify your email. <a class='banner-a' href='send_verification_email.php?email=" . $email . "'>Send new verification email</a>.";
+                        }
 
                         // Regenerate session id on successful submission
                         session_regenerate_id();
@@ -74,6 +85,11 @@
         <title>To Do Roll - Sign In</title>
     </head>
     <body>
+
+        <?php if (isset($banner)) {?>
+            <div class="banner-outer <?php if (strpos($banner, "successfully") !== false) { echo "banner-success"; } ?>"><span class="banner-text"><?php echo $banner; ?></span><button class="banner-btn <?php if (strpos($banner, "successfully") !== false) { echo "banner-btn-success"; } ?>" onclick="closeBanner(this)"><i class="fas fa-times"></i></button></div>
+        <?php } ?>
+
         <img src="assets/toDoRollLogo.png" class="form-logo-center">
         <div class="form-outer-div">
             <h1 class="form-h1">Sign In</h1>
