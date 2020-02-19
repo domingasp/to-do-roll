@@ -41,9 +41,25 @@
                     // Get current date and time in UTC
                     $current_time = gmdate("Y-m-d H:i:s", time());
 
-                    // Add to database
+                    // Add to account database
                     $stmt = $conn->prepare("INSERT INTO Account(email, password, name, date_created, verification_token, token_date) VALUES (?, ?, ?, ?, ?, ?)");
                     $stmt->bind_param("ssssss", $email, $hashed_password, $name, $current_time, $verification_token, $current_time);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    $account_id = $conn->insert_id;
+
+                    // Add to list database
+                    $stmt = $conn->prepare("INSERT INTO List(name, account_id) VALUES ('To-Do', ?)");
+                    $stmt->bind_param("i", $account_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    $list_id = $conn->insert_id;
+
+                    // Add to item database
+                    $stmt = $conn->prepare("INSERT INTO Item(title, colour, list_id) VALUES('Your first item', 'FFFFFF', ?)");
+                    $stmt->bind_param("i", $list_id);
                     $stmt->execute();
                     $stmt->close();
 

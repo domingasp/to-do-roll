@@ -28,6 +28,7 @@
         if ($number > 0) {
             // When email verified redirect to sign in page or index if user signed in
             if ($verified == 1) {
+                if (isset($_SESSION["banner-msg"])) { unset($_SESSION["banner-msg"]); }
                 if (isset($_SESSION["account_id"])) {
                     header("Location: index.php");
                     die();
