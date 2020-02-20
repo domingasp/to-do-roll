@@ -30,7 +30,36 @@
         <?php if (isset($banner)) {?>
             <div class="banner-outer <?php if (strpos($banner, "successfully") !== false) { echo "banner-success"; } ?>"><span class="banner-text"><?php echo $banner; ?></span><button class="banner-btn <?php if (strpos($banner, "successfully") !== false) { echo "banner-btn-success"; } ?>" onclick="closeBanner(this)"><i class="fas fa-times"></i></button></div>
         <?php } ?>
-        <a href="sign_out.php">Sign Out</a>
+        <div class="header-bar">
+            <a href="index.php"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a>
+            <a href="sign_out.php">Sign Out</a>
+        </div>
+
+        <?php
+            // $stmt = $conn->prepare("SELECT * FROM List WHERE account_id = ?");
+            // $stmt->bind_param("i", $_SESSION["account_id"]);
+            // $stmt->execute();
+            // $list_result = $stmt->get_result();
+            // $stmt->close();
+
+            // while ($row = mysqli_fetch_assoc($list_result)) {
+            //     echo "<div>";
+            //     print_r($row);
+            //     $stmt = $conn->prepare("SELECT * FROM Item WHERE list_id = ?");
+            //     $stmt->bind_param("i", $row["list_id"]);
+            //     $stmt->execute();
+            //     $item_result = $stmt->get_result();
+            //     $stmt->close();
+
+            //     while ($item_row = mysqli_fetch_assoc($item_result)) {
+            //         echo "<div>";
+            //         print_r($item_row);
+            //         echo "</div>";
+            //     }
+
+            //     echo "</div>";
+            // }
+        ?>
 
         <script src="js/script.js"></script>
     </body>

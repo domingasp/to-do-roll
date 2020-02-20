@@ -14,10 +14,10 @@
         $email = $_GET["email"];
 
         // Check whether the email exists
-        $stmt = $conn->prepare("SELECT name, verified, verification_token, token_date, verification_last_sent, date_created FROM Account WHERE email = ?");
+        $stmt = $conn->prepare("SELECT name, verified, verification_token, token_date, date_created FROM Account WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
-        $stmt->bind_result($name, $verified, $verification_token, $token_date, $verification_last_sent, $date_created);
+        $stmt->bind_result($name, $verified, $verification_token, $token_date, $date_created);
         $stmt->store_result();
         $stmt->fetch();
         $number = $stmt->num_rows;
@@ -43,7 +43,6 @@
 
             // Get current date and time in UTC and transform them into types that can be manipulated
             $current_time_obj = strtotime($current_time_str);
-            $verification_last_sent_php = strtotime($verification_last_sent);
             $token_date_php = strtotime($token_date);
 
             // If token is older than 8 hours (480 minutes) than generate a new one
@@ -57,12 +56,6 @@
                 $stmt->execute();
                 $stmt->close();
             }
-
-            // Update the timestamp in the database to reflect that a new email has been sent
-            $stmt = $conn->prepare("UPDATE Account SET verification_last_sent = ? WHERE email = ?");
-            $stmt->bind_param("ss", $current_time_str, $email);
-            $stmt->execute();
-            $stmt->close();
 
             $to  = "domingas.p@yahoo.com"; // BEFORE RELEASE: Change to $email
             $subject = 'Please verify your email';

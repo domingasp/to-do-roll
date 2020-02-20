@@ -90,7 +90,7 @@
             <div class="banner-outer <?php if (strpos($banner, "successfully") !== false) { echo "banner-success"; } ?>"><span class="banner-text"><?php echo $banner; ?></span><button class="banner-btn <?php if (strpos($banner, "successfully") !== false) { echo "banner-btn-success"; } ?>" onclick="closeBanner(this)"><i class="fas fa-times"></i></button></div>
         <?php } ?>
 
-        <img src="assets/toDoRollLogo.png" class="form-logo-center">
+        <a href="index.php"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a>
         <div class="form-outer-div">
             <h1 class="form-h1">Sign In</h1>
             <form class="main-form" action="sign_in.php" method="post" novalidate>
@@ -106,6 +106,8 @@
                     <input type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordView()">
                     <label for="showPasswordCheckbox">Show Password</label>
                 </div>
+
+                <a href="forgot_password.php" class="forgot-pw-a">Forgot Password?</a>
 
                 <button class="basic-btn form-btn" type="submit">Sign In</button>
 

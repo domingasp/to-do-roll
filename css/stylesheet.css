@@ -367,7 +367,7 @@ body {
 .banner-a {
 	border: none;
 	outline: none;
-	
+
 	color: #ffffff;
 
 	border-radius: 0.125rem;
@@ -379,6 +379,50 @@ body {
 .banner-a:hover, .banner-a:focus {
 	background-color: #00487C;
 	padding: 0.125rem 0.25rem;
+}
+
+.forgot-pw-a {
+	outline: none;
+
+	float: right;
+	margin-top: 0.25rem;
+	margin-bottom: 0.5rem;
+
+	font-size: 0.9rem;
+
+	color: #0496FF;
+
+	box-sizing: border-box;
+	padding: 0.25rem;
+	border-radius: 0.125rem;
+
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.forgot-pw-a:hover, .forgot-pw-a:focus {
+	box-shadow: 0 0 0.25rem 0.0625rem #00A7E1;
+}
+
+.back-a {
+	outline: none;
+
+	display: inline-block;
+	margin-top: 0.5rem;
+	margin-bottom: -0.5rem;
+
+	color: #0496FF;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+	border-radius: 0.125rem;
+
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.back-a:hover, .back-a:focus {
+	box-shadow: 0 0 0.25rem 0.0625rem #00A7E1;
 }
 
 @media only screen and (max-width: 600px) {
