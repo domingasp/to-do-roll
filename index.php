@@ -38,7 +38,7 @@
         <?php if (isset($banner)) {?>
             <div class="banner-outer <?php if (strpos($banner, "successfully") !== false) { echo "banner-success"; } ?>"><span class="banner-text"><?php echo $banner; ?></span><button class="banner-btn <?php if (strpos($banner, "successfully") !== false) { echo "banner-btn-success"; } ?>" onclick="closeBanner(this)"><i class="fas fa-times"></i></button></div>
         <?php } ?>
-        <div class="header-bar">
+        <div class="header-bar" id="headerBar">
             <div class="header-logo-name-div">
                 <a href="index.php" class="header-logo"><img src="assets/toDoRollLogo.png" style="max-width: 3rem;"></a>
                 <p class="header-name">Hi, <?php echo ucwords($name); ?></p>
@@ -49,6 +49,72 @@
                     <li class="header-li"><a href="sign_out.php"><i class="fas fa-door-open icon-space"></i>Sign Out</a></li>
                 <div>
             </ul>
+        </div>
+
+        <!-- ##################
+            ##################
+            ##################
+
+            ADD Colour Strip use a div with color
+            Work on modal for adding new item
+        
+            ##################
+            ##################
+            ##################-->
+
+        <div class="main-body-div" id="mainBodyDiv">
+            <div class="list-div">
+                <a href="#" class="list-title">To-Do</a>
+                <div class="item-div">
+                    <a href="#" class="item-a">Have a really loooooooooooooong shower Have a really loooooooooooooong shower Have a really loooooooooooooong shower Have a really loooooooooooooong shower</a>
+                    <div class="item-control-div">
+                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
+                    </div>
+                </div>
+                <div class="item-div">
+                    <a href="#" class="item-a">Item 2</a>
+                    <div class="item-control-div">
+                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
+                    </div>
+                </div>
+                <div class="item-div">
+                    <a href="#" class="item-a">Item 2</a>
+                    <div class="item-control-div">
+                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
+                    </div>
+                </div>
+                <div class="item-div">
+                    <a href="#" class="item-a">Item 2</a>
+                    <div class="item-control-div">
+                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
+                    </div>
+                </div>
+                <div class="item-div">
+                    <a href="#" class="item-a">Item 2</a>
+                    <div class="item-control-div">
+                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
+                    </div>
+                </div>
+                <div class="add-item-div">
+                    <a href="#" class="add-item-a"><i class="fas fa-plus icon-space"></i>New Item</a>
+                </div>
+            </div>
+
+            <div class="list-div">
+                <a href="#" class="list-title">Second List</a>
+                <div class="item-div">
+                    <a href="#" class="item-a">Item 1</a>
+                    <div class="item-control-div">
+                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
+                    </div>
+                </div>
+                <div class="add-item-div">
+                    <a href="#" class="add-item-a"><i class="fas fa-plus icon-space"></i>New Item</a>
+                </div>
+            </div>
+            <div class="list-div" style="text-align:center;">
+                <a href="#" class="list-title"><i class="fas fa-plus icon-space"></i>New List</a>
+            </div>
         </div>
 
         <?php

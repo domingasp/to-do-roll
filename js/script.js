@@ -1,3 +1,11 @@
+// Sets main list area to fill remaining space to allow scrolling easily
+document.getElementById("mainBodyDiv").style.height = (document.documentElement.clientHeight - document.getElementById("headerBar").offsetHeight).toString() + "px";
+
+// Adds window event listener for resize
+window.addEventListener("resize", function(e) {
+    document.getElementById("mainBodyDiv").style.height = (document.documentElement.clientHeight - document.getElementById("headerBar").offsetHeight).toString() + "px";
+})
+
 // Toggle password input fields to either display text or obscured password
 function togglePasswordView() {
     var passwordField = document.getElementById("password");
