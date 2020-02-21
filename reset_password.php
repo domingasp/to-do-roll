@@ -99,7 +99,7 @@
         <title>To Do Roll - Reset Password</title>
     </head>
     <body>
-    <a href="index.php"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a>
+        <div style="text-align:center;"><a href="index.php" class="form-logo-a"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a></div>
         <div class="form-outer-div">
             <h1 class="form-h1">Reset Password</h1>
             <form class="main-form" onsubmit="return validateForm()" action="reset_password.php<?php echo "?email=" . $email . "&password_reset_token=" . $password_reset_token; ?>" method="post" novalidate>

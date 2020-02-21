@@ -4,6 +4,14 @@
     if (!isset($_SESSION["account_id"])) {
         header("Location: sign_in.php");
         die();
+    } else {
+        // Get the logged in users details
+        $stmt = $conn->prepare("SELECT name FROM Account WHERE account_id = ?");
+        $stmt->bind_param("s", $_SESSION["account_id"]);
+        $stmt->execute();
+        $stmt->bind_result($name);
+        $stmt->fetch();
+        $stmt->close();
     }
 
     // Sets the banner message to the session variable if it has been set
@@ -31,8 +39,16 @@
             <div class="banner-outer <?php if (strpos($banner, "successfully") !== false) { echo "banner-success"; } ?>"><span class="banner-text"><?php echo $banner; ?></span><button class="banner-btn <?php if (strpos($banner, "successfully") !== false) { echo "banner-btn-success"; } ?>" onclick="closeBanner(this)"><i class="fas fa-times"></i></button></div>
         <?php } ?>
         <div class="header-bar">
-            <a href="index.php"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a>
-            <a href="sign_out.php">Sign Out</a>
+            <div class="header-logo-name-div">
+                <a href="index.php" class="header-logo"><img src="assets/toDoRollLogo.png" style="max-width: 3rem;"></a>
+                <p class="header-name">Hi, <?php echo ucwords($name); ?></p>
+            </div>
+            <ul class="header-ul">
+                <div class="header-li-inner-div">
+                    <li class="header-li"><a href="#"><i class="fas fa-cog icon-space"></i>Settings</a></li>
+                    <li class="header-li"><a href="sign_out.php"><i class="fas fa-door-open icon-space"></i>Sign Out</a></li>
+                <div>
+            </ul>
         </div>
 
         <?php

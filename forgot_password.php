@@ -103,7 +103,7 @@
         <title>To Do Roll - Forgot Password</title>
     </head>
     <body>
-        <a href="index.php"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a>
+        <div style="text-align:center;"><a href="index.php" class="form-logo-a"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a></div>
         <div class="form-outer-div">
             <h1 class="form-h1">Forgot Password?</h1>
             <a href="sign_in.php" class="back-a"><i class="fas fa-arrow-left"></i> Back</a>

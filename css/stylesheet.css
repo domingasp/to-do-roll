@@ -77,14 +77,26 @@ body {
 	Focus (blue) : 00A7E1
 */
 
-.form-logo-center {
-	display: block;
+.form-logo-a {
+	outline: none;
+	border: none;
 
+	display: inline-block;
+	margin: 0 auto;
+
+	border-radius: 0.125rem;
+}
+
+.form-logo-a:hover, .form-logo-a:focus {
+	box-shadow: 0 0 0.25rem 0.125rem #00487C;
+}
+
+.form-logo-center {
 	width: 5rem;
 
 	box-sizing: border-box;
 	padding: 0.5rem;
-	margin: 0 auto;
+	
 }
 
 .form-outer-div {
@@ -423,6 +435,111 @@ body {
 
 .back-a:hover, .back-a:focus {
 	box-shadow: 0 0 0.25rem 0.0625rem #00A7E1;
+}
+
+.header-bar {
+	background-color: #FFC857;
+	display: flex;
+}
+
+.header-logo-name-div {
+	display: inline-flex;
+	align-items: center;
+}
+
+.header-logo {
+	outline: none;
+	border: none;
+
+	display: inline-block;
+	margin-left: 2rem;
+
+	padding: 0 0.25rem;
+	border-radius: 0.125rem;
+}
+
+.header-logo:hover, .header-logo:focus {
+	box-shadow: 0 0 0.25rem 0.125rem #00487C;
+}
+
+.header-name {
+	display: inline-block;
+	font-size: 0.9rem;
+	margin: 0 0.5rem;
+}
+
+.header-ul {
+	float: right;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: transparent;
+
+	margin-right: 0;
+	margin-left: auto;
+}
+
+.header-li {
+	float: left;
+}
+
+.header-li a {
+	outline: none;
+
+	display: block;
+
+	color: #000000;
+	text-align: center;
+	text-decoration: none;
+
+	font-size: 0.9rem;
+
+	padding: 1.125rem 2rem;
+
+	transition: all 0.2s;
+}
+
+.header-li a:hover, .header-li a:focus {
+	background-color: #00A7E1;
+	color: #ffffff;
+}
+
+.icon-space::after {
+	white-space: pre;
+	content: " ";
+}
+
+@media only screen and (max-width: 768px) {
+	.header-bar {
+		display: block;
+	}
+	.header-logo-name-div {
+		display: flex;
+		justify-content: center;
+	}
+	.header-logo {
+		margin: 0;
+	}
+	.header-ul {
+		float: none;
+		width: 100%;
+		margin: 0;
+	}
+	.header-li-inner-div {
+		float: right;
+	}
+	.header-li a {
+		padding: 0.75rem 0.5rem;
+		text-align: center;
+	}
+	.header-li a i {
+		display: block;
+		margin-bottom: 0.25rem;
+	}
+	.icon-space::after {
+		content: none;
+	}
 }
 
 @media only screen and (max-width: 600px) {

@@ -94,7 +94,7 @@
         <title>To Do Roll - Register</title>
     </head>
     <body>
-    <a href="index.php"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a>
+        <div style="text-align:center;"><a href="index.php" class="form-logo-a"><img src="assets/toDoRollLogo.png" class="form-logo-center"></a></div>
         <div class="form-outer-div">
             <h1 class="form-h1">Register</h1>
             <form class="main-form" action="register.php" onsubmit="return validateForm()" method="post" novalidate>
