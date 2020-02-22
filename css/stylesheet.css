@@ -378,7 +378,7 @@ html, body {
 	background-color: #00487C;
 }
 
-.banner-btn-success:hover, .banner-btn:focus {
+.banner-btn-success:hover, .banner-btn-success:focus {
 	background-color: #50A826;
 }
 
@@ -575,9 +575,19 @@ html, body {
 	box-shadow: 0 0.125rem 0.125rem 0.0625rem #aaaaaa;
 }
 
+.item-div .tick-a {
+	display: flex;
+	align-items: center;
+}
+
+.item-div .save-btn {
+	justify-content: center;
+}
+
 .item-a {
 	outline: none;
 	text-decoration: none;
+	border: none;
 
 	flex-grow: 1;
 
@@ -585,9 +595,10 @@ html, body {
 	color: #000000;
 	font-size: 0.9rem;
 
-	padding: 1.5rem 1rem;
-
 	box-sizing: border-box;
+	padding: 1.5rem 1rem;
+	margin-right: 0.25rem;
+
 	border-radius: 0.25rem;
 
 	transition: all 0.2s;
@@ -597,35 +608,72 @@ html, body {
 	box-shadow: 0 0 0.25rem 0.0625rem #00A7E1;
 }
 
-.item-control-div {
-	display: flex;
-	flex-direction: column;
-
-	margin-right: 0;
-	margin-left: auto;
-
-	align-items: center;
-	justify-content: center;
+.item-textarea {
+	min-width: 0;
+	resize: none;
+	word-wrap: break-word;
+	-webkit-appearance: none;
 }
 
 .tick-a {
 	outline: none;
-	display: flex;
-	align-items: center;
-
-	flex: 1;
 
 	text-decoration: none;
 
 	color: #000000;
 
-	margin: 0.25rem;
-	padding: 0.5rem 0.75rem;
-
+	padding: 0 1rem;
 	border-radius: 0.25rem;
+	margin: 0.25rem;
 
 	font-size: 1rem;
 	transition: all 0.2s;
+}
+
+.new-item-btn-div {
+	display: flex;
+	flex-direction: column;
+}
+
+.item-btn {
+	min-width: 0;
+	outline: none;
+	border: none;
+	padding: none;
+
+	display: flex;
+	justify-content: center;
+
+	flex: 1;
+
+	text-decoration: none;
+
+	box-sizing: border-box;
+	padding: 0 0.6rem;
+	font-size: 0.9rem;
+
+	margin: 0.125rem;
+	border-radius: 0.25rem;
+
+	transition: all 0.2s;
+	cursor: pointer;
+}
+
+.save-btn {
+	background: linear-gradient(0deg, #3EC300 0%, #61CD2E 100%);
+	color: #ffffff;
+}
+
+.save-btn:hover, .save-btn:focus {
+	box-shadow: 0 0 0.25rem 0.125rem #00487C;
+}
+
+.cancel-btn {
+	color: red;
+}
+
+.cancel-btn:hover, .cancel-btn:focus {
+	box-shadow: 0 0 0.25rem 0.125rem red;
 }
 
 .check-a:hover, .check-a:focus {
@@ -639,17 +687,21 @@ html, body {
 	margin-bottom: 0.75rem;
 }
 
-.add-item-a {
+.add-item-btn {
 	outline: none;
-	text-decoration: none;
+	border: none;
+
 	color: #000000;
 	border-radius: 0.125rem;
 	padding: 0.125rem 0.25rem;
 
+	font-size: 1rem;
+
 	transition: all 0.2s;
+	cursor: pointer;
 }
 
-.add-item-a:hover, .add-item-a:focus {
+.add-item-btn:hover, .add-item-btn:focus {
 	box-shadow: 0 0 0.25rem 0.0625rem #00A7E1;
 }
 

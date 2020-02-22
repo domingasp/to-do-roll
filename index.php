@@ -25,7 +25,9 @@
 ?><!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <script src="js/jquery-3.4.1.min.js"></script>
 
         <link rel="stylesheet" type="text/css" href="css/all.css">
         <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
@@ -67,51 +69,36 @@
                 <a href="#" class="list-title">To-Do</a>
                 <div class="item-div">
                     <a href="#" class="item-a">Have a really loooooooooooooong shower Have a really loooooooooooooong shower Have a really loooooooooooooong shower Have a really loooooooooooooong shower</a>
-                    <div class="item-control-div">
-                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                    </div>
+                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
                 </div>
                 <div class="item-div">
                     <a href="#" class="item-a">Item 2</a>
-                    <div class="item-control-div">
-                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                    </div>
+                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
                 </div>
                 <div class="item-div">
                     <a href="#" class="item-a">Item 2</a>
-                    <div class="item-control-div">
-                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                    </div>
+                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
                 </div>
                 <div class="item-div">
                     <a href="#" class="item-a">Item 2</a>
-                    <div class="item-control-div">
-                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                    </div>
+                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
                 </div>
                 <div class="item-div">
                     <a href="#" class="item-a">Item 2</a>
-                    <div class="item-control-div">
-                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                    </div>
+                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
                 </div>
+                <form onsubmit="" class="item-div">
+                    <textarea class="item-a item-textarea" placeholder="Item Title..." onKeyDown="preventNewLine(event)"></textarea>
+                    <div class="new-item-btn-div">
+                        <button type="submit" class="item-btn save-btn">Save</button>
+                        <button type="button" class="item-btn cancel-btn">Cancel</button>
+                    </div>
+                </form>
                 <div class="add-item-div">
-                    <a href="#" class="add-item-a"><i class="fas fa-plus icon-space"></i>New Item</a>
+                    <button onclick="newListItem(this)" class="add-item-btn"><i class="fas fa-plus icon-space"></i>New Item</button>
                 </div>
             </div>
 
-            <div class="list-div">
-                <a href="#" class="list-title">Second List</a>
-                <div class="item-div">
-                    <a href="#" class="item-a">Item 1</a>
-                    <div class="item-control-div">
-                        <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                    </div>
-                </div>
-                <div class="add-item-div">
-                    <a href="#" class="add-item-a"><i class="fas fa-plus icon-space"></i>New Item</a>
-                </div>
-            </div>
             <div class="list-div" style="text-align:center;">
                 <a href="#" class="list-title"><i class="fas fa-plus icon-space"></i>New List</a>
             </div>

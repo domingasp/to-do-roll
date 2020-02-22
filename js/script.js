@@ -183,3 +183,15 @@ function closeBanner(elem) {
         banner.remove();
     },500);
 }
+
+// Adds a new form item in the list
+function newListItem(elem) {
+    
+}
+
+// Prevents a new line being created when the Return key is pressed
+function preventNewLine(event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+    }
+}
