@@ -53,82 +53,43 @@
             </ul>
         </div>
 
-        <!-- ##################
-            ##################
-            ##################
-
-            ADD Colour Strip use a div with color
-            Work on modal for adding new item
-        
-            ##################
-            ##################
-            ##################-->
-
         <div class="main-body-div" id="mainBodyDiv">
-            <div class="list-div">
-                <a href="#" class="list-title">To-Do</a>
-                <div class="item-div">
-                    <a href="#" class="item-a">Have a really loooooooooooooong shower Have a really loooooooooooooong shower Have a really loooooooooooooong shower Have a really loooooooooooooong shower</a>
-                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                </div>
-                <div class="item-div">
-                    <a href="#" class="item-a">Item 2</a>
-                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                </div>
-                <div class="item-div">
-                    <a href="#" class="item-a">Item 2</a>
-                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                </div>
-                <div class="item-div">
-                    <a href="#" class="item-a">Item 2</a>
-                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                </div>
-                <div class="item-div">
-                    <a href="#" class="item-a">Item 2</a>
-                    <a href="#" class="tick-a check-a"><i class="fas fa-check"></i></a>
-                </div>
-                <form onsubmit="" class="item-div">
-                    <textarea class="item-a item-textarea" placeholder="Item Title..." onKeyDown="preventNewLine(event)"></textarea>
-                    <div class="new-item-btn-div">
-                        <button type="submit" class="item-btn save-btn">Save</button>
-                        <button type="button" class="item-btn cancel-btn">Cancel</button>
-                    </div>
-                </form>
-                <div class="add-item-div">
-                    <button onclick="newListItem(this)" class="add-item-btn"><i class="fas fa-plus icon-space"></i>New Item</button>
-                </div>
-            </div>
+            <?php
+                $stmt = $conn->prepare("SELECT * FROM List WHERE account_id = ? AND is_deleted = 0");
+                $stmt->bind_param("i", $_SESSION["account_id"]);
+                $stmt->execute();
+                $list_result = $stmt->get_result();
+                $stmt->close();
+
+                // Read in the user lists
+                while ($row = mysqli_fetch_assoc($list_result)) {
+                    echo "<div class=\"list-div\" data-id=\"" . $row["list_id"] . "\">";
+                    echo "<button class=\"list-title\" onclick=\"openListModal(this)\">" . $row["name"] . "</button>";
+                    $stmt = $conn->prepare("SELECT * FROM Item WHERE list_id = ? AND is_complete = 0");
+                    $stmt->bind_param("i", $row["list_id"]);
+                    $stmt->execute();
+                    $item_result = $stmt->get_result();
+                    $stmt->close();
+
+                    // Read in the items for each list
+                    while ($item_row = mysqli_fetch_assoc($item_result)) {
+                        echo "<div class=\"item-div\">";
+                        echo "<button class=\"item-a\">" . $item_row["title"] . "</button>";
+                        echo "<button class=\"tick-a check-a\" onclick=\"itemComplete(this)\" data-id=\"" . $item_row["item_id"] . "\"><i class=\"fas fa-check\"></i></button>";
+                        echo "</div>";
+                    }
+
+                    echo "<div class=\"add-item-div\">";
+                    echo "<button onclick=\"newListItem(this)\" class=\"add-item-btn\"><i class=\"fas fa-plus icon-space\"></i>New Item</button>";
+                    echo "</div>";
+                    echo "</div>";
+                }
+            ?>
 
             <div class="list-div" style="text-align:center;">
-                <a href="#" class="list-title"><i class="fas fa-plus icon-space"></i>New List</a>
+                <button onclick="newList(this)" class="list-title list-title-btn"><i class="fas fa-plus icon-space"></i>New List</button>
             </div>
         </div>
-
-        <?php
-            // $stmt = $conn->prepare("SELECT * FROM List WHERE account_id = ?");
-            // $stmt->bind_param("i", $_SESSION["account_id"]);
-            // $stmt->execute();
-            // $list_result = $stmt->get_result();
-            // $stmt->close();
-
-            // while ($row = mysqli_fetch_assoc($list_result)) {
-            //     echo "<div>";
-            //     print_r($row);
-            //     $stmt = $conn->prepare("SELECT * FROM Item WHERE list_id = ?");
-            //     $stmt->bind_param("i", $row["list_id"]);
-            //     $stmt->execute();
-            //     $item_result = $stmt->get_result();
-            //     $stmt->close();
-
-            //     while ($item_row = mysqli_fetch_assoc($item_result)) {
-            //         echo "<div>";
-            //         print_r($item_row);
-            //         echo "</div>";
-            //     }
-
-            //     echo "</div>";
-            // }
-        ?>
 
         <script src="js/script.js"></script>
     </body>
