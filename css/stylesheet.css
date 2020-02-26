@@ -69,7 +69,7 @@ button {
 
 /* ###### MAIN STYLING ###### */
 
-body {
+body, input, select, textarea {
 	font-family: Roboto, Arial, sans-serif;
 }
 
@@ -856,7 +856,7 @@ html, body {
 	width: 98%;
 	max-width: 25rem;
 
-	margin-top: 25vh;
+	margin-top: 1vh;
 	margin-bottom: auto;
 
 	border-radius: 0.0625rem;
@@ -978,6 +978,222 @@ html, body {
 	color: #ffffff;
 }
 
+.list-modal-content-2-columns {
+	background-color: #ffffff;
+	
+	width: 98%;
+	max-width: 37.5rem;
+
+	margin-top: 1vh;
+	margin-bottom: auto;
+
+	border-radius: 0.0625rem;
+}
+
+.modal-main-column-div {
+	display: flex;
+	flex-direction: row;
+}
+
+.modal-left-div {
+	box-sizing: border-box;
+	padding-right: 0.5rem;
+	margin-right: 0.5rem;
+	flex-grow: 1;
+
+	border-right: solid 0.125rem #dddddd;
+}
+
+.modal-right-div {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	margin-left: auto;
+	margin-right: 0;
+	justify-content: center;
+}
+
+.form-textarea {
+	padding: 0;
+	border: none;
+	outline: none;
+	-webkit-appearance: none;
+
+	display: block;
+
+	width: 100%;
+	height: 9rem;
+	resize: none;
+	font-size: 1rem;
+
+	margin-top: 0.25rem;
+
+	box-sizing: border-box;
+	padding: 0.75rem 0.5rem;
+	border: solid 0.0625rem #cccccc;
+	border-radius: 0.25rem;
+
+	transition: box-shadow 0.2s, border-color 0.2s;
+	cursor: pointer;
+}
+
+.form-textarea:focus {
+	border-color: #00A7E1;
+	box-shadow: 0 0 0.25rem 0 #00A7E1;
+}
+
+.modal-colour-div {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+
+	margin-top: 0.25rem;
+}
+
+.modal-colour-input {
+	border: none;
+	padding: 0;
+
+	background-color: transparent;
+
+	width: 100%;
+	height: 2.75rem;
+	margin-right: 0.25rem;
+
+	border-radius: 0.3rem;
+	border: solid 0.0625rem #cccccc;
+
+    outline: none;
+	-webkit-appearance: none;
+	
+	cursor: pointer;
+}
+
+.modal-colour-input::-webkit-color-swatch-wrapper {
+	padding: 0;
+	background-color: transparent;
+
+}
+
+.modal-colour-input::-webkit-color-swatch {
+	border: none;
+	background-color: transparent;
+	border-radius: 0.25rem;
+	transition: all 0.2s;
+
+	cursor: pointer;
+}
+
+.modal-colour-input:focus {
+	padding: 0;
+	border-color: #00A7E1;
+	box-shadow: 0 0 0.25rem 0 #00A7E1;
+}
+
+.form-input-colour {
+	padding: 0;
+	border: none;
+	outline: none;
+	-webkit-appearance: none;
+
+	display: inline-block;
+
+	width: 6rem;
+	font-size: 1rem;
+
+	box-sizing: border-box;
+	padding: 0.75rem 0.5rem;
+	border: solid 0.0625rem #cccccc;
+	border-radius: 0.25rem;
+
+	padding-left: 1.4rem;
+
+	transition: all 0.2s;
+}
+
+.form-input-colour:focus {
+	border-color: #00A7E1;
+	box-shadow: 0 0 0.25rem 0 #00A7E1;
+}
+
+.colour-text-div {
+	position: relative;
+}
+
+.hash-span {
+	display: inline;
+	position: absolute;
+	top: 0.95rem;
+	left: 0.5rem;
+}
+
+.modal-checkmark-container {
+	display: block;
+	position: relative;
+	cursor: pointer;
+	font-size: 1rem;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	margin-bottom: 1rem;
+}
+  
+.modal-checkmark-container input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+  
+.modal-checkmark-span {
+	display: block;
+	height: 2rem;
+	width: 2rem;
+
+	margin: 0 auto;
+	margin-top: 0.2rem;
+
+	border: solid 0.0625rem #cccccc;
+	border-radius: 0.25rem;
+
+	transition: all 0.2s;
+}
+  
+.modal-checkmark-container:hover input ~ .modal-checkmark-span,
+.modal-checkmark-container:focus input ~ .modal-checkmark-span {
+	border-color: #00A7E1;
+	box-shadow: 0 0 0.25rem 0 #00A7E1;
+}
+  
+.modal-checkmark-container input:checked ~ .modal-checkmark-span {
+	background-color: #61CD2E;
+	border-color: #50A826;
+}
+  
+.modal-checkmark-span:after {
+	content: "";
+	display: none;
+}
+  
+.modal-checkmark-container input:checked ~ .modal-checkmark-span:after {
+	display: block;
+	margin: 0 auto;
+	margin-top: 0.125rem;
+}
+  
+.modal-checkmark-container .modal-checkmark-span:after {
+	width: 0.5rem;
+	height: 1rem;
+	border: solid #ffffff;
+	border-width: 0 0.35rem 0.35rem 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
 @media only screen and (max-width: 290px) {
 	.list-modal-save-btn {
 		margin-bottom: 0.5rem;
@@ -991,6 +1207,14 @@ html, body {
 
 		padding: 0.5rem 1.5rem;
 		margin: 0.25rem auto;
+	}
+	.modal-main-column-div {
+		flex-direction: column;
+	}
+	.modal-left-div, .modal-right-div {
+		margin: 0;
+		padding: 0;
+		border: none;
 	}
 }
 

@@ -28,8 +28,10 @@
             $stmt->execute();
             $stmt->close();
 
+            $newItemId = $conn->insert_id;
+
             //Return the data back to caller
-            echo json_encode(array("success" => $newItemTextareaName,"error" => false));
+            echo json_encode(array("success" => [$newItemTextareaName, $newItemId],"error" => false));
         } else {
             //Return the data back to caller
             echo json_encode(array("success" => false,"error" => "List not associated with user."));

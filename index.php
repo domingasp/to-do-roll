@@ -65,7 +65,7 @@
                 while ($row = mysqli_fetch_assoc($list_result)) {
                     echo "<div class=\"list-div\" data-id=\"" . $row["list_id"] . "\">";
                     echo "<button class=\"list-title\" onclick=\"openListModal(this)\">" . $row["name"] . "</button>";
-                    $stmt = $conn->prepare("SELECT * FROM Item WHERE list_id = ? AND is_complete = 0");
+                    $stmt = $conn->prepare("SELECT * FROM Item WHERE list_id = ? AND is_complete = 0 AND is_deleted = 0");
                     $stmt->bind_param("i", $row["list_id"]);
                     $stmt->execute();
                     $item_result = $stmt->get_result();
@@ -74,7 +74,7 @@
                     // Read in the items for each list
                     while ($item_row = mysqli_fetch_assoc($item_result)) {
                         echo "<div class=\"item-div\">";
-                        echo "<button class=\"item-a\">" . $item_row["title"] . "</button>";
+                        echo "<button class=\"item-a\" onclick=\"openItemModal(this)\" data-id=\"" . $item_row["item_id"] . "\">" . $item_row["title"] . "</button>";
                         echo "<button class=\"tick-a check-a\" onclick=\"itemComplete(this)\" data-id=\"" . $item_row["item_id"] . "\"><i class=\"fas fa-check\"></i></button>";
                         echo "</div>";
                     }

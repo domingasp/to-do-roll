@@ -6,6 +6,10 @@ window.addEventListener("resize", function(e) {
     document.getElementById("mainBodyDiv").style.height = (document.documentElement.clientHeight - document.getElementById("headerBar").offsetHeight).toString() + "px";
 })
 
+function updateColourInput(value) {
+    document.getElementById("modalColourInput").value = "#" + value;
+}
+
 // Toggle password input fields to either display text or obscured password
 function togglePasswordView() {
     var passwordField = document.getElementById("password");
@@ -390,7 +394,7 @@ function newListItem(elem) {
                         // Add the new item
                         itemDiv = document.createElement("DIV");
                         $(itemDiv).addClass("item-div");
-                        $(itemDiv).html("<button class=\"item-a\">" + response["success"] + "</button><button class=\"tick-a check-a\"><i class=\"fas fa-check\"></i></button>");
+                        $(itemDiv).html("<button class=\"item-a\">" + response["success"][0] + "</button><button class=\"tick-a check-a\" onclick=\"itemComplete(this)\" data-id=\"" + response["success"][1] + "\"><i class=\"fas fa-check\"></i></button>");
                         $(itemDiv).insertBefore(nextElement);
                     }
                 });
@@ -715,6 +719,8 @@ function openListModal(elem) {
                     $(undoBtn).insertAfter("#mainBodyDiv");
                     undoBtn.style.animation = "buttonFromBotttom 0.2s forwards";
                     $(undoBtn).click(function() {
+                        var request;
+
                         // Prevent default posting of form - put here to work in case of errors
                         event.preventDefault();
 
@@ -779,6 +785,592 @@ function openListModal(elem) {
     }
 }
 
-function closeModal() {
+// Send a request for a complete item
+function itemComplete(elem) {
+    var request;
+    // Prevent default posting of form - put here to work in case of errors
+    event.preventDefault();
 
+    // Remove undo button if it exists
+    if ($("#undoBtnId")) {
+        $("#undoBtnId").remove();
+    }
+
+    // Abort any pending request
+    if (request) {
+        request.abort();
+    }
+
+    itemId = $(elem).attr("data-id");
+    listId = $($(elem).parent().parent()[0]).attr("data-id");
+
+    // Serialize the data in the form
+    var serializedData = "itemId=" + itemId + "&listId=" + listId;
+
+    // Fire off the request to /form.php
+    request = $.ajax({
+        url: "item_complete.php",
+        type: "post",
+        dataType: "json",
+        data: serializedData
+    });
+
+    // Callback handler that will be called on success
+    request.done(function (response, textStatus, jqXHR){
+        // If error is returned
+        if (response["error"]) {
+            console.log(response["error"]);
+        // If successfully remove from database
+        } else {
+            // Create an undo button
+            undoBtn = document.createElement("BUTTON");
+            $(undoBtn).addClass("undo-btn");
+            undoBtn.id = "undoBtnId";
+            $(undoBtn).html("<i class=\"fas fa-undo icon-space\"></i>Undo");
+
+            $(undoBtn).insertAfter("#mainBodyDiv");
+            $(undoBtn).attr("data-id", "[" + itemId + "," + listId + "]");
+            undoBtn.style.animation = "buttonFromBotttom 0.2s forwards";
+            $(undoBtn).click(function() {
+                var request;
+                // Prevent default posting of form - put here to work in case of errors
+                event.preventDefault();
+
+                // Abort any pending request
+                if (request) {
+                    request.abort();
+                }
+
+                // Serialize the data in the form
+                var serializedData = "itemId=" + itemId + "&listId=" + listId;
+
+                // Fire off the request to /form.php
+                request = $.ajax({
+                    url: "undo_item_complete.php",
+                    type: "post",
+                    dataType: "json",
+                    data: serializedData
+                });
+
+                // Callback handler that will be called on success
+                request.done(function (response, textStatus, jqXHR){
+                    // If error is returned
+                    if (response["error"]) {
+                        console.log(response["error"]);
+                    // If re-add the list
+                    } else {
+                        location.reload();
+                    }
+                });
+
+                // Callback handler that will be called on failure
+                request.fail(function (jqXHR, textStatus, errorThrown){
+                    console.error(
+                        "The following error occurred: "+
+                        textStatus, errorThrown
+                    );
+                });
+            });
+        }
+    });
+
+    // Callback handler that will be called on failure
+    request.fail(function (jqXHR, textStatus, errorThrown){
+        console.error(
+            "The following error occurred: "+
+            textStatus, errorThrown
+        );
+    });
+
+    $(elem.parentNode).remove();
+}
+
+function openItemModal(elem) {
+    var request;
+    // Prevent default posting of form - put here to work in case of errors
+    event.preventDefault();
+
+    // Remove undo button if it exists
+    if ($("#undoBtnId")) {
+        $("#undoBtnId").remove();
+    }
+
+    // Abort any pending request
+    if (request) {
+        request.abort();
+    }
+
+    itemId = $(elem).attr("data-id");
+    listId = $($(elem).parent().parent()[0]).attr("data-id");
+
+    // Serialize the data in the form
+    var serializedData = "itemId=" + itemId + "&listId=" + listId;
+
+    // Fire off the request to /form.php
+    request = $.ajax({
+        url: "fetch_item_data.php",
+        type: "post",
+        dataType: "json",
+        data: serializedData
+    });
+
+    // Callback handler that will be called on success
+    request.done(function (response, textStatus, jqXHR){
+        // If error is returned
+        if (response["error"]) {
+            console.log(response["error"]);
+        // If successfully remove from database
+        } else {
+            responseDict = response["success"];
+            createItemModal(elem, responseDict["title"], responseDict["desc"], responseDict["colour"], responseDict["is_complete"], responseDict["all_colours"]);
+        }
+    });
+
+    // Callback handler that will be called on failure
+    request.fail(function (jqXHR, textStatus, errorThrown){
+        console.error (
+            "The following error occurred: "+
+            textStatus, errorThrown
+        );
+    });
+}
+
+// Creates an item modal
+function createItemModal(elem, title, desc, currentColour, isComplete, allColours) {
+    // If modal exists then do no create a new one
+    if (!$("#modalId").length) {
+        modalDiv = document.createElement("DIV");
+        modalDiv.id = "modalId";
+        $(modalDiv).addClass("modal");
+
+        // Remove modal if clicking outside main div
+        $(modalDiv).click(function(event) {
+            if (event.target == modalDiv) {
+                modalDiv.remove();
+                blur();
+                elem.focus();
+            }
+        });
+
+        main2ColumnDiv = document.createElement("DIV");
+        $(main2ColumnDiv).addClass("list-modal-content-2-columns");
+
+        itemModalHeaderDiv = document.createElement("DIV");
+        $(itemModalHeaderDiv).addClass("list-modal-header");
+
+        itemModalHeaderSpan = document.createElement("SPAN");
+        $(itemModalHeaderSpan).addClass("list-modal-header-span");
+        $(itemModalHeaderSpan).html("<i class=\"fas fa-edit icon-space\"></i>Edit Item");
+
+        itemModalHeaderBtn = document.createElement("BUTTON");
+        $(itemModalHeaderBtn).addClass("list-modal-close");
+        $(itemModalHeaderBtn).html("<i class=\"fas fa-times\"></i>");
+        $(itemModalHeaderBtn).click(function(event) {
+            if ($("#modalId").length) {
+                $("#modalId").remove();
+                blur();
+                elem.focus();
+            }
+        });
+
+        itemModalMainForm = document.createElement("FORM");
+        itemModalMainForm.id = "itemModalForm";
+        $(itemModalMainForm).addClass("list-modal-form");
+
+        itemModalMainColumnDiv = document.createElement("DIV");
+        $(itemModalMainColumnDiv).addClass("modal-main-column-div");
+
+        itemModalLeftDiv = document.createElement("DIV");
+        $(itemModalLeftDiv).addClass("modal-left-div");
+
+        itemModalTitleLabel = document.createElement("LABEL");
+        $(itemModalTitleLabel).addClass("form-label");
+        $(itemModalTitleLabel).attr("for", "itemModalInput");
+        $(itemModalTitleLabel).html("Item Name");
+
+        itemModalTitleInput = document.createElement("INPUT");
+        $(itemModalTitleInput).addClass("form-input");
+        itemModalTitleInput.id = "itemModalInput";
+        $(itemModalTitleInput).attr("type", "text");
+        $(itemModalTitleInput).attr("name", "itemModalInput");
+        $(itemModalTitleInput).attr("value", title);
+
+        itemModalDescLabel = document.createElement("LABEL");
+        $(itemModalDescLabel).addClass("form-label");
+        $(itemModalDescLabel).attr("for", "modalItemDescription");
+        $(itemModalDescLabel).html("Description");
+
+        itemModalDescTextarea = document.createElement("TEXTAREA");
+        $(itemModalDescTextarea).addClass("form-textarea");
+        itemModalDescTextarea.id = "modalItemDescription"
+        $(itemModalDescTextarea).attr("type", "text");
+        $(itemModalDescTextarea).attr("name", "modalItemDescription");
+        $(itemModalDescTextarea).html(desc);
+
+        itemModalRightDiv = document.createElement("DIV");
+        $(itemModalRightDiv).addClass("modal-right-div");
+
+        itemModalColourLabel = document.createElement("LABEL");
+        $(itemModalColourLabel).addClass("form-label");
+        $(itemModalColourLabel).attr("for", "modalColourDropdown");
+        $(itemModalColourLabel).html("Colour");
+
+        itemModalColourDiv = document.createElement("DIV");
+        $(itemModalColourDiv).addClass("modal-colour-div");
+
+        itemModalColourTypeInput = document.createElement("INPUT");
+        $(itemModalColourTypeInput).attr("type", "color");
+        $(itemModalColourTypeInput).addClass("modal-colour-input");
+        itemModalColourTypeInput.id = "modalColourInput";
+        $(itemModalColourTypeInput).attr("name", "modalColourInput");
+        $(itemModalColourTypeInput).attr("list", "presetColours");
+        $(itemModalColourTypeInput).attr("value", "#" + currentColour);
+
+        preset_colours = ["ffffff", "ce2d4f", "f08a4b", "ffc145", "55c1ff", "81c14b", "bfc0c0"];
+
+        for (c of allColours) {
+            if (!preset_colours.includes(c.toLowerCase())) {
+                preset_colours.push(c.toLowerCase());
+            }
+        }
+
+        itemModalColourDatalist = document.createElement("DATALIST");
+        itemModalColourDatalist.id = "presetColours";
+
+        for (c of preset_colours) {
+            optionColour = document.createElement("OPTION");
+            $(optionColour).html("#" + c.toLowerCase());
+            $(itemModalColourDatalist).append(optionColour);
+        }
+
+        itemModalColourTextDiv = document.createElement("DIV");
+        $(itemModalColourTextDiv).addClass("colour-text-div");
+
+        itemModalHashSpan = document.createElement("SPAN");
+        $(itemModalHashSpan).addClass("hash-span");
+        $(itemModalHashSpan).html("#");
+
+        itemModalColourTextInput = document.createElement("INPUT");
+        $(itemModalColourTextInput).addClass("form-input-colour");
+        itemModalColourTextInput.id = "formTextColour";
+        $(itemModalColourTextInput).attr("type", "text");
+        $(itemModalColourTextInput).attr("value", currentColour.toLowerCase());
+        $(itemModalColourTextInput).attr("maxlength", 6);
+        $(itemModalColourTextInput).attr("oninput", "updateColourInput(this.value)");
+
+        $(itemModalColourTypeInput).change(function() {
+            itemModalColourTextInput.value = itemModalColourTypeInput.value.substring(1);
+        });
+
+        itemModalCompleteLabel = document.createElement("LABEL");
+        $(itemModalCompleteLabel).addClass("form-label modal-checkmark-container");
+        $(itemModalCompleteLabel).attr("for", "modalCheckBox");
+        $(itemModalCompleteLabel).html("Complete?");
+
+        itemModalCompleteInput = document.createElement("INPUT");
+        $(itemModalCompleteInput).attr("type", "checkbox");
+        itemModalCompleteInput.id = "modalCheckBox";
+        $(itemModalCompleteInput).attr("name", "modalCheckBox");
+        // If checked then check the checkbox
+        if (isComplete == 1) {
+            $(itemModalCompleteInput).attr("checked", "checked");
+        }
+
+        itemModalCompleteSpan = document.createElement("SPAN");
+        $(itemModalCompleteSpan).addClass("modal-checkmark-span");
+
+        itemModalControlsDiv = document.createElement("DIV");
+        $(itemModalControlsDiv).addClass("list-modal-controls");
+
+        itemModalSaveCancelDiv = document.createElement("DIV");
+        $(itemModalSaveCancelDiv).addClass("list-modal-save-cancel");
+
+        itemModelSaveBtn = document.createElement("BUTTON");
+        $(itemModelSaveBtn).addClass("list-modal-btn list-modal-save-btn create-btn");
+        $(itemModelSaveBtn).attr("type", "submit");
+        $(itemModelSaveBtn).html("Save");
+
+        itemModelCancelBtn = document.createElement("BUTTON");
+        $(itemModelCancelBtn).addClass("list-modal-btn list-modal-cancel-btn");
+        $(itemModelCancelBtn).attr("type", "button");
+        $(itemModelCancelBtn).html("Cancel");
+
+        $(itemModelCancelBtn).click(function(event) {
+            if ($("#modalId").length) {
+                $("#modalId").remove();
+                blur();
+                elem.focus();
+            }
+        });
+
+        itemModalDeleteBtn = document.createElement("BUTTON");
+        $(itemModalDeleteBtn).addClass("list-modal-btn cancel-btn");
+        $(itemModalDeleteBtn).attr("type", "button");
+        $(itemModalDeleteBtn).html("<i class=\"fas fa-trash icon-space\"></i> Delete Item");
+
+        // -------------------------- MODAL CONSTRUCTION -------------------------- //
+
+        $(modalDiv).append(main2ColumnDiv);
+        $(main2ColumnDiv).append(itemModalHeaderDiv);
+        $(itemModalHeaderDiv).append(itemModalHeaderSpan);
+        $(itemModalHeaderDiv).append(itemModalHeaderBtn);
+
+        $(main2ColumnDiv).append(itemModalMainForm);
+        $(itemModalMainForm).append(itemModalMainColumnDiv);
+        $(itemModalMainForm).append(itemModalControlsDiv);
+        $(itemModalMainColumnDiv).append(itemModalLeftDiv);
+        $(itemModalMainColumnDiv).append(itemModalRightDiv);
+
+        $(itemModalLeftDiv).append(itemModalTitleLabel);
+        $(itemModalLeftDiv).append(itemModalTitleInput);
+        $(itemModalLeftDiv).append(itemModalDescLabel);
+        $(itemModalLeftDiv).append(itemModalDescTextarea);
+
+        $(itemModalRightDiv).append(itemModalColourLabel);
+        $(itemModalRightDiv).append(itemModalColourDiv);
+        $(itemModalRightDiv).append(itemModalCompleteLabel);
+
+        $(itemModalColourDiv).append(itemModalColourTypeInput);
+        $(itemModalColourDiv).append(itemModalColourDatalist);
+        $(itemModalColourDiv).append(itemModalColourTextDiv);
+
+        $(itemModalColourTextDiv).append(itemModalHashSpan);
+        $(itemModalColourTextDiv).append(itemModalColourTextInput);
+
+        $(itemModalCompleteLabel).append(itemModalCompleteInput);
+        $(itemModalCompleteLabel).append(itemModalCompleteSpan);
+
+        $(itemModalControlsDiv).append(itemModalSaveCancelDiv);
+        $(itemModalSaveCancelDiv).append(itemModelSaveBtn);
+        $(itemModalSaveCancelDiv).append(itemModelCancelBtn);
+        $(itemModalControlsDiv).append(itemModalDeleteBtn);
+
+        $(modalDiv).insertAfter("#mainBodyDiv");
+
+        // Variable to hold request
+        var request;
+        // Bind to the submit event of our form
+        $(itemModalMainForm).submit(function(event) {
+            // Prevent default posting of form - put here to work in case of errors
+            event.preventDefault();
+
+            // Remove undo button if it exists
+            if ($("#undoBtnId")) {
+                $("#undoBtnId").remove();
+            }
+
+            itemModalInput = $(itemModalMainForm).find("input[name=\"itemModalInput\"]").val();
+            modalItemDescription = $(itemModalMainForm).find("textarea[name=\"modalItemDescription\"]").val();
+            modalColourInput = $(itemModalMainForm).find("input[name=\"modalColourInput\"]").val().substring(1);
+            modalCheckBox = $(itemModalMainForm).find("input[name=\"modalCheckBox\"]").is(":checked");
+
+            itemModalInputError = itemModalInput.length == 0 ? "Please enter a list name." : (itemModalInput.length > 255 ? "The name is too long." : "");
+            modalItemDescriptionError = modalItemDescription.length > 255 ? "The description is too long." : "";
+
+            // if (itemModalInputError.length == 0 && modalItemDescriptionError.length == 0) {
+                // Check if the input and current values are the same
+                // Abort any pending request
+                if (request) {
+                    request.abort();
+                }
+                // Setup some local variables
+                var $form = $(this);
+
+                // Let's select and cache all the fields
+                var $inputs = $form.find("input, select, button, textarea");
+
+                listItem = $(elem).parent().parent()[0];
+
+                // Serialize the data in the form
+                var serializedData = "itemId=" + $(elem).attr("data-id") + "&itemModalInput=" + itemModalInput + "&modalItemDescription=" + modalItemDescription + "&modalColourInput=" + modalColourInput + "&modalCheckBox=" + modalCheckBox + "&listId=" + $(listItem).attr("data-id");
+
+                // Let's disable the inputs for the duration of the Ajax request.
+                // Note: we disable elements AFTER the form data has been serialized.
+                // Disabled form elements will not be serialized.
+                $inputs.prop("disabled", true);
+
+                // Fire off the request to /form.php
+                request = $.ajax({
+                    url: "save_item_data.php",
+                    type: "post",
+                    dataType: "json",
+                    data: serializedData
+                });
+
+                // Callback handler that will be called on success
+                request.done(function (response, textStatus, jqXHR){
+                    // If error is returned
+                    if (response["error"]) {
+                        if (response["error"]["itemTitle"]) {
+                            if ($("#itemModalInput").next().hasClass("new-item-error-p")) {
+                                $("#itemModalInput").next().html(response["error"]["itemTitle"]);
+                            } else {
+                                p = document.createElement("P");
+                                p.innerHTML = response["error"]["itemTitle"];
+                                p.classList.add("new-item-error-p");
+
+                                $(p).insertAfter("#itemModalInput");
+                            }
+                        }
+
+                        if (response["error"]["itemDesc"]) {
+                            if ($("#modalItemDescription").next().hasClass("new-item-error-p")) {
+                                $("#modalItemDescription").next().html(response["error"]["itemDesc"]);
+                            } else {
+                                p = document.createElement("P");
+                                p.innerHTML = response["error"]["itemDesc"];
+                                p.classList.add("new-item-error-p");
+
+                                $(p).insertAfter("#modalItemDescription");
+                            }
+                        }
+                    // If successfully added to the database
+                    } else {
+                        if ($("#itemModalInput").next().hasClass("new-item-error-p")) {
+                            $("#itemModalInput").next().remove();
+                        }
+
+                        if ($("#modalItemDescription").next().hasClass("new-item-error-p")) {
+                            $("#modalItemDescription").next().remove();
+                        }
+
+                        $(elem).html(response["success"]["title"]);
+                        $(modalDiv).remove();
+                    }
+                });
+
+                // Callback handler that will be called on failure
+                request.fail(function (jqXHR, textStatus, errorThrown){
+                    console.error(
+                        "The following error occurred: "+
+                        textStatus, errorThrown
+                    );
+                });
+
+                // Callback handler that will be called regardless
+                request.always(function () {
+                    // Reenable the inputs
+                    $inputs.prop("disabled", false);
+                });
+            // }
+        });
+
+        $(itemModalDeleteBtn).click(function() {
+            // Prevent default posting of form - put here to work in case of errors
+            event.preventDefault();
+
+            // Remove undo button if it exists
+            if ($("#undoBtnId")) {
+                $("#undoBtnId").remove();
+            }
+
+            // Abort any pending request
+            if (request) {
+                request.abort();
+            }
+            // Setup some local variables
+            var $form = $(this);
+
+            // Let's select and cache all the fields
+            var $inputs = $form.find("input, select, button, textarea");
+
+            listItem = $(elem).parent().parent()[0];
+
+            // Serialize the data in the form
+            var serializedData = "itemId=" + $(elem).attr("data-id") + "&listId=" + $(listItem).attr("data-id");
+
+            // Let's disable the inputs for the duration of the Ajax request.
+            // Note: we disable elements AFTER the form data has been serialized.
+            // Disabled form elements will not be serialized.
+            $inputs.prop("disabled", true);
+
+            // Fire off the request to /form.php
+            request = $.ajax({
+                url: "delete_item.php",
+                type: "post",
+                dataType: "json",
+                data: serializedData
+            });
+
+            // Callback handler that will be called on success
+            request.done(function (response, textStatus, jqXHR) {
+                // If error is returned
+                if (response["error"]) {
+                    if ($("#itemModalInput").next().hasClass("new-item-error-p")) {
+                        $("#itemModalInput").next().html(response["error"]);
+                    } else {
+                        p = document.createElement("P");
+                        p.innerHTML = response["error"];
+                        p.classList.add("new-item-error-p");
+
+                        $(p).insertAfter("#itemModalInput");
+                    }
+                // If successfully remove from database
+                } else {
+                    if ($("#itemModalInput").next().hasClass("new-item-error-p")) {
+                        $("#itemModalInput").next().remove();
+                    }
+
+                    $(modalDiv).remove();
+                    listItem = $(elem).parent().parent()[0];
+                    $(elem.parentNode).remove();
+
+                    // Create an undo button
+                    undoBtn = document.createElement("BUTTON");
+                    $(undoBtn).addClass("undo-btn");
+                    undoBtn.id = "undoBtnId";
+                    $(undoBtn).html("<i class=\"fas fa-undo icon-space\"></i>Undo");
+                    $(undoBtn).insertAfter("#mainBodyDiv");
+                    undoBtn.style.animation = "buttonFromBotttom 0.2s forwards";
+                    $(undoBtn).click(function() {
+                        var request;
+
+                        // Prevent default posting of form - put here to work in case of errors
+                        event.preventDefault();
+
+                        // Abort any pending request
+                        if (request) {
+                            request.abort();
+                        }
+
+                        // Serialize the data in the form
+                        var serializedData = "itemId=" + $(elem).attr("data-id") + "&listId=" + $(listItem).attr("data-id");
+
+                        // Fire off the request to /form.php
+                        request = $.ajax({
+                            url: "undo_delete_item.php",
+                            type: "post",
+                            dataType: "json",
+                            data: serializedData
+                        });
+
+                        // Callback handler that will be called on success
+                        request.done(function (response, textStatus, jqXHR){
+                            // If error is returned
+                            if (response["error"]) {
+                                console.log(response["error"]);
+                            // If re-add the list
+                            } else {
+                                location.reload();
+                            }
+                        });
+
+                        // Callback handler that will be called on failure
+                        request.fail(function (jqXHR, textStatus, errorThrown){
+                            console.error(
+                                "The following error occurred: "+
+                                textStatus, errorThrown
+                            );
+                        });
+
+                        // Callback handler that will be called regardless
+                        request.always(function () {
+                            // Reenable the inputs
+                            $inputs.prop("disabled", false);
+                        });
+                    });
+                }
+            });
+        });
+    }
 }
