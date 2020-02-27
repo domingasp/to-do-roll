@@ -394,7 +394,7 @@ function newListItem(elem) {
                         // Add the new item
                         itemDiv = document.createElement("DIV");
                         $(itemDiv).addClass("item-div");
-                        $(itemDiv).html("<button class=\"item-a\">" + response["success"][0] + "</button><button class=\"tick-a check-a\" onclick=\"itemComplete(this)\" data-id=\"" + response["success"][1] + "\"><i class=\"fas fa-check\"></i></button>");
+                        $(itemDiv).html("<button class=\"item-a\" data-id=\"" + response["success"][1] + "\">" + response["success"][0] + "</button><button class=\"tick-a check-a\" onclick=\"itemComplete(this)\" data-id=\"" + response["success"][1] + "\"><i class=\"fas fa-check\"></i></button>");
                         $(itemDiv).insertBefore(nextElement);
                     }
                 });
@@ -1236,6 +1236,10 @@ function createItemModal(elem, title, desc, currentColour, isComplete, allColour
 
                         $(elem).html(response["success"]["title"]);
                         $(modalDiv).remove();
+
+                        if (response["success"]["is_complete"] == "true") {
+                            $(elem.parentNode).remove();
+                        }
                     }
                 });
 

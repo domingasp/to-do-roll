@@ -23,8 +23,8 @@
         $stmt->close();
 
         // Sets new list title
-        $stmt = $conn->prepare("UPDATE Item SET is_complete = 1 WHERE item_id = ?");
-        $stmt->bind_param("s", $item_id);
+        $stmt = $conn->prepare("UPDATE Item SET is_complete = 1 WHERE item_id = ? AND list_id = ?");
+        $stmt->bind_param("ss", $item_id, $listId);
         $stmt->execute();
         $rows_changed = $stmt->affected_rows;
         $stmt->close();
