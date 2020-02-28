@@ -621,6 +621,8 @@ html, body {
 
 	border-radius: 0.25rem;
 
+	border-left: solid 1rem #ffffff;
+
 	transition: all 0.2s;
 	cursor: pointer;
 }

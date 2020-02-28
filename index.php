@@ -47,7 +47,6 @@
             </div>
             <ul class="header-ul">
                 <div class="header-li-inner-div">
-                    <li class="header-li"><a href="#"><i class="fas fa-cog icon-space"></i>Settings</a></li>
                     <li class="header-li"><a href="sign_out.php"><i class="fas fa-door-open icon-space"></i>Sign Out</a></li>
                 <div>
             </ul>
@@ -63,7 +62,7 @@
 
                 // Read in the user lists
                 while ($row = mysqli_fetch_assoc($list_result)) {
-                    echo "<div class=\"list-div\" data-id=\"" . $row["list_id"] . "\">";
+                    echo "<div id=\"listDiv\" class=\"list-div\" data-id=\"" . $row["list_id"] . "\">";
                     echo "<button class=\"list-title\" onclick=\"openListModal(this)\">" . $row["name"] . "</button>";
                     $stmt = $conn->prepare("SELECT * FROM Item WHERE list_id = ? AND is_complete = 0 AND is_deleted = 0");
                     $stmt->bind_param("i", $row["list_id"]);
@@ -74,11 +73,10 @@
                     // Read in the items for each list
                     while ($item_row = mysqli_fetch_assoc($item_result)) {
                         echo "<div class=\"item-div\">";
-                        echo "<button class=\"item-a\" onclick=\"openItemModal(this)\" data-id=\"" . $item_row["item_id"] . "\">" . $item_row["title"] . "</button>";
+                        echo "<button class=\"item-a\" style=\"border-left-color:" . "#" . $item_row["colour"] . "\" onclick=\"openItemModal(this)\" data-id=\"" . $item_row["item_id"] . "\">" . $item_row["title"] . "</button>";
                         echo "<button class=\"tick-a check-a\" onclick=\"itemComplete(this)\" data-id=\"" . $item_row["item_id"] . "\"><i class=\"fas fa-check\"></i></button>";
                         echo "</div>";
                     }
-
                     echo "<div class=\"add-item-div\">";
                     echo "<button onclick=\"newListItem(this)\" class=\"add-item-btn\"><i class=\"fas fa-plus icon-space\"></i>New Item</button>";
                     echo "</div>";

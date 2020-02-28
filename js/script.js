@@ -394,7 +394,7 @@ function newListItem(elem) {
                         // Add the new item
                         itemDiv = document.createElement("DIV");
                         $(itemDiv).addClass("item-div");
-                        $(itemDiv).html("<button class=\"item-a\" data-id=\"" + response["success"][1] + "\">" + response["success"][0] + "</button><button class=\"tick-a check-a\" onclick=\"itemComplete(this)\" data-id=\"" + response["success"][1] + "\"><i class=\"fas fa-check\"></i></button>");
+                        $(itemDiv).html("<button class=\"item-a\" onclick=\"openItemModal(this)\" data-id=\"" + response["success"][1] + "\">" + response["success"][0] + "</button><button class=\"tick-a check-a\" onclick=\"itemComplete(this)\" data-id=\"" + response["success"][1] + "\"><i class=\"fas fa-check\"></i></button>");
                         $(itemDiv).insertBefore(nextElement);
                     }
                 });
@@ -1165,7 +1165,7 @@ function createItemModal(elem, title, desc, currentColour, isComplete, allColour
             modalCheckBox = $(itemModalMainForm).find("input[name=\"modalCheckBox\"]").is(":checked");
 
             itemModalInputError = itemModalInput.length == 0 ? "Please enter a list name." : (itemModalInput.length > 255 ? "The name is too long." : "");
-            modalItemDescriptionError = modalItemDescription.length > 255 ? "The description is too long." : "";
+            modalItemDescriptionError = modalItemDescription.length > 21844 ? "The description is too long." : "";
 
             // if (itemModalInputError.length == 0 && modalItemDescriptionError.length == 0) {
                 // Check if the input and current values are the same
@@ -1235,6 +1235,7 @@ function createItemModal(elem, title, desc, currentColour, isComplete, allColour
                         }
 
                         $(elem).html(response["success"]["title"]);
+                        $(elem).css("border-left-color", "#" + response["success"]["colour"]);
                         $(modalDiv).remove();
 
                         if (response["success"]["is_complete"] == "true") {
